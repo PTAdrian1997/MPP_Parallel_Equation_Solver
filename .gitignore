@@ -1,0 +1,10 @@
+.vscode/tasks.json
+a_input.txt
+b_input.txt
+debug.txt
+linear_systems.exe
+system_generator.exe
+try_out_session.exe
+.vscode/launch.json
+.vscode/settings.json
+.vscode/tasks.exe
