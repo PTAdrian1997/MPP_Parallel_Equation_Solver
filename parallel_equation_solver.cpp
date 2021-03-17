@@ -41,7 +41,7 @@ double * parallel_system_solver(linear_system_of_equations lse, int number_of_th
     needed_counter[lse.unknowns_no - 1] = 0;
     std::vector<std::thread> threads; 
     for(int i = lse.unknowns_no - 1; i > -1; i--){
-        threads.push_back(std::thread(&manager_thread, std::ref(solution), number_of_threads, std::ref(needed_counter)));
+        threads.push_back(std::thread(manager_thread, std::ref(solution), number_of_threads, std::ref(needed_counter)));
         threads.back().join();
     }
 
