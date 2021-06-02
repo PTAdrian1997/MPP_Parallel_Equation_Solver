@@ -1,7 +1,7 @@
 .vscode/tasks.json
+debug.txt
 a_input.txt
 b_input.txt
-debug.txt
 linear_systems.exe
 system_generator.exe
 try_out_session.exe

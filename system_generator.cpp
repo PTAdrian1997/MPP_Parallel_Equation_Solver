@@ -1,8 +1,13 @@
 #include <stdlib.h>
 #include <time.h>
-#include "system_generator.h"
 #include <math.h>
 #include <fstream>
+
+struct linear_system_of_equations {
+    double **coefficients;
+    double *free_terms;
+    int unknowns_no;
+};
 
 /**
  * @brief Generate a random system of equations of n equations in n unknowns.
@@ -46,11 +51,9 @@ void write_coefficient_matrix(double ** coeff, char * coeff_filename, int number
 
     std::ofstream coeff_file;
     coeff_file.open(coeff_filename);
-    // write the number of unknowns on the first line:
-    coeff_file << number_of_unknowns << "\n";
     // on each row, write the coeffiecients of the corresponding equation:
     for(int row_id = 0; row_id < number_of_unknowns; row_id++){
-        for(int col_id = 0; col_id < number_of_unknowns; col_id++) coeff_file << coeff[row_id][col_id] << " ";
+        for(int col_id = row_id; col_id < number_of_unknowns; col_id++) coeff_file << coeff[row_id][col_id] << " ";
         coeff_file << "\n";
     }
     coeff_file.close();
@@ -66,11 +69,22 @@ void write_coefficient_matrix(double ** coeff, char * coeff_filename, int number
 void write_free_terms_array(double * free_terms, char * free_terms_filename, int number_of_unknowns){
     std::ofstream free_terms_file;
     free_terms_file.open(free_terms_filename);
-    /*write the number of equations on the 1st line:*/
-    free_terms_file << number_of_unknowns << "\n";
     /*write each free term on the next line, separated by space:*/
     for(int element_id = 0; element_id < number_of_unknowns; element_id ++)free_terms_file << free_terms[element_id] << " ";
     free_terms_file.close();
+}
+
+/**
+ * @brief 
+ * 
+ * @param unknowns_no 
+ * @param unknown_no_filename 
+ */
+void write_number_of_unknowns(int unknowns_no,  char * unknown_no_filename){
+    std::ofstream unknowns_no_file;
+    unknowns_no_file.open(unknown_no_filename);
+    unknowns_no_file << unknowns_no << "\n";
+    unknowns_no_file.close();
 }
 
 /**
@@ -80,8 +94,20 @@ void write_free_terms_array(double * free_terms, char * free_terms_filename, int
  * @param coeff_filename 
  * @param free_terms_filename 
  */
-void write_system_of_equations(linear_system_of_equations lse, char * coeff_filename, char * free_terms_filename){
+void write_system_of_equations(linear_system_of_equations lse, char * coeff_filename, char * free_terms_filename, char * unknown_no_filename){
     /*first, write the file that contains the coefficients matrix:*/
+    write_number_of_unknowns(lse.unknowns_no, unknown_no_filename);
     write_coefficient_matrix(lse.coefficients, coeff_filename, lse.unknowns_no);
     write_free_terms_array(lse.free_terms, free_terms_filename, lse.unknowns_no);
+}
+
+int main(){
+    int number_of_equations = 10000;
+    char * coeff_filename = "a_input_10000.txt";
+    char * free_terms_filename = "free_terms_10000.txt";
+    char * unknown_no_filename = "unknown_no_10000.txt";
+    linear_system_of_equations lse = generate_system(number_of_equations);
+    write_system_of_equations(lse, coeff_filename, free_terms_filename, unknown_no_filename);
+    
+    return 0;
 }

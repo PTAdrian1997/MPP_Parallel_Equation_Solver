@@ -27,14 +27,12 @@ double** read_coeff_matrix(char * coeff_filename){
     return result;
 }
 
-double * read_free_terms(char * free_term_filename){
+double * read_free_terms(char * free_term_filename, int number_of_equations){
     std::ifstream free_tearm_file(free_term_filename);
     // read the number of equations:
-    int n = 0;
-    free_tearm_file >> n;
     // read the values:
-    double * result = new double[n];
-    for(int eq_id = 0; eq_id < n; eq_id ++){
+    double * result = new double[number_of_equations];
+    for(int eq_id = 0; eq_id < number_of_equations; eq_id ++){
         free_tearm_file >> result[eq_id];
         if(result[eq_id] == 0)result[eq_id] = 1000.0;
     }
@@ -53,7 +51,7 @@ double * read_free_terms(char * free_term_filename){
 linear_system_of_equations read_linear_system(char * coeff_filename, char * free_terms_filename, int no_unknowns){
     linear_system_of_equations result;
     result.coefficients = read_coeff_matrix(coeff_filename);
-    result.free_terms = read_free_terms(free_terms_filename);
+    result.free_terms = read_free_terms(free_terms_filename, no_unknowns);
     result.unknowns_no = no_unknowns;
     return result;
 }
